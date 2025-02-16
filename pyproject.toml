@@ -1,0 +1,29 @@
+[project]
+name = "trade"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "thy3368",email = "thy_email@126.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "yfinance (>=0.2.52,<0.3.0)",
+    "plotly (>=6.0.0,<7.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "binance (>=0.3,<0.4)",
+    "numpy (>=2.2.3,<3.0.0)",
+    "python-binance (>=1.0.27,<2.0.0)",
+    "appbuilder (>=0.0.20191210.1,<0.0.20191211.0)",
+    "notebook (>=7.3.2,<8.0.0)",
+    "sentence-transformers (>=3.4.1,<4.0.0)",
+    "faiss-cpu (>=1.10.0,<2.0.0)",
+    "chromadb (>=0.6.3,<0.7.0)",
+    "pymilvus (>=2.5.4,<3.0.0)",
+    "streamlit (>=1.42.0,<2.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
