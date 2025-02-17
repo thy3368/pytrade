@@ -51,13 +51,42 @@ class TradingAssistant:
         ]
 
     def chat(self, user_message: str) -> str:
-        messages = [{"role": "user", "content": user_message}]
+        messages = [
+            {
+                "role": "system",
+                "content": "你是一个交易分析助手。当用户询问市场状态时，你需要调用 get_market_data 函数获取数据进行分析。"
+            },
+            {"role": "user", "content": user_message}
+        ]
+        
+        try:
+            # 直接调用函数获取数据
+            function_response = get_market_data(symbol="BTCUSDT")
+            
+            # 将数据添加到消息中
+            messages.append({
+                "role": "function",
+                "name": "get_market_data",
+                "content": json.dumps(function_response, ensure_ascii=False)
+            })
+            
+            # 让模型生成最终回答
+            final_response = self.client.chat.completions.create(
+                model="deepseek-chat",
+                messages=messages
+            )
+            
+            return final_response.choices[0].message.content
+            
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return f"获取数据时发生错误: {str(e)}"
         
         response = self.client.chat.completions.create(
             model="deepseek-chat",
             messages=messages,
             functions=self.functions,
-            function_call="auto"
+            function_call={"name": "get_market_data"}  # 强制调用函数
         )
         
         response_message = response.choices[0].message
