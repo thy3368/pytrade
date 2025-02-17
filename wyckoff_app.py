@@ -16,6 +16,10 @@ def main():
     )
     limit = st.sidebar.slider("数据点数量", 100, 1000, 500)
     
+    # 显示选项配置
+    st.sidebar.header("显示选项")
+    show_btc = st.sidebar.checkbox("显示BTC走势", value=True)
+    
     # 初始化分析器
     analyzer = WyckoffAnalyzer()
     
@@ -24,7 +28,12 @@ def main():
         with st.spinner('正在获取数据...'):
             df = analyzer.get_market_data(symbol, interval, limit)
             phase, df = analyzer.analyze_wyckoff_phase(df)
-            prediction = analyzer.predict_trend(df)  # 添加趋势预测
+            prediction = analyzer.predict_trend(df)
+            
+            # 获取BTC相关性
+            if show_btc and analyzer.btc_data is not None:
+                btc_corr = df['close'].corr(analyzer.btc_data['close'])
+                st.sidebar.metric("BTC相关性", f"{btc_corr:.2%}")
         
         # 显示基本信息
         col1, col2, col3, col4 = st.columns(4)
@@ -48,7 +57,7 @@ def main():
         
         # 显示图表
         st.subheader("技术分析图表")
-        fig = analyzer.plot_analysis(df, phase)
+        fig = analyzer.plot_analysis(df, phase, show_btc=show_btc)
         st.plotly_chart(fig, use_container_width=True)
         
         # 显示详细数据
