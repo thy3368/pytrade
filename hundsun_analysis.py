@@ -1013,58 +1013,87 @@ class StockAnalyzer:
         # 只返回最显著的几个点
         return significant.head().sort_index()
 
-    def analyze(self):
-        """分析股票数据"""
+    def add_key_events(self):
+        """
+        添加恒生电子的关键事件
+        返回事件列表，每个事件包含日期和描述
+        """
+        events = [
+            {'date': '2023-03-15', 'description': '发布2022年年报，营收增长22.37%'},
+            {'date': '2023-08-30', 'description': '发布2023年半年报，营收增长25.12%'},
+            {'date': '2023-09-20', 'description': '投资数字化转型服务商"天阙科技"'},
+            {'date': '2023-11-15', 'description': '与华为签署全面合作协议'},
+            {'date': '2024-01-10', 'description': '发布业绩预告，2023年净利润预增50%-70%'},
+        ]
+        return pd.DataFrame(events)
+
+    def plot_stock_with_events(self):
+        """
+        绘制股票走势图和关键事件
+        """
+        # 获取数据
         df = self.get_data()
-        if df is None or len(df) == 0:
-            print("无法获取数据")
-            return
+        events_df = self.add_key_events()
+        events_df['date'] = pd.to_datetime(events_df['date'])
+
+        # 创建图形和子图
+        plt.style.use('seaborn')  # 使用seaborn样式
+        fig = plt.figure(figsize=(20, 12))  # 增大图表尺寸
+        gs = gridspec.GridSpec(2, 1, height_ratios=[3, 1])
+
+        # 绘制股票价格
+        ax1 = plt.subplot(gs[0])
+        ax1.plot(df['trade_date'], df['close'], label='收盘价', color='#1f77b4', linewidth=2)
+        
+        # 添加事件标记
+        for idx, event in events_df.iterrows():
+            # 找到最接近事件日期的股价
+            closest_date_idx = (df['trade_date'] - event['date']).abs().idxmin()
+            closest_date = df['trade_date'].iloc[closest_date_idx]
+            price = df['close'].iloc[closest_date_idx]
             
-        # 计算量价背离
-        divergence_dates = self.check_divergence(df)
-        print("\n量价背离日期:")
-        print(divergence_dates[['trade_date', 'close', 'vol']])
+            # 绘制事件标记
+            ax1.scatter(closest_date, price, color='red', s=150, zorder=5, marker='^')
+            
+            # 添加事件说明文字，调整文本位置和样式
+            ax1.annotate(event['description'], 
+                        xy=(closest_date, price),
+                        xytext=(20, 20), 
+                        textcoords='offset points',
+                        bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.8),
+                        arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0.3', color='red'),
+                        fontsize=10,
+                        ha='left',
+                        va='bottom')
+
+        # 设置x轴格式
+        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+        ax1.xaxis.set_major_locator(mdates.MonthLocator())  # 每月显示一个刻度
+        plt.xticks(rotation=45)
         
-        # 预测价格
-        future_df, confidence, _, weights = self.predict_price(df)
+        # 添加网格
+        ax1.grid(True, linestyle='--', alpha=0.7)
         
-        print(f"\n价格预测 (模型置信度: {confidence:.2%}):\n")
-        print("未来30天预测价格:")
+        # 设置标题和标签
+        ax1.set_title('恒生电子(600570)股价走势与关键事件分析', fontsize=16, pad=20)
+        ax1.set_ylabel('股价(元)', fontsize=12)
         
-        # 输出威科夫分析结果
-        wyckoff_analysis = self.analyze_wyckoff(df)
-        print(f"\n威科夫分析:")
-        print(f"当前阶段: {future_df['wyckoff_phase'].iloc[0]}")
-        print(f"趋势强度: {wyckoff_analysis['trend_strength']}/4")
-        print(f"支撑位: {wyckoff_analysis['support']:.2f}")
-        print(f"阻力位: {wyckoff_analysis['resistance']:.2f}")
-        print(f"价格位置: {wyckoff_analysis['price_position']:.2%}")
+        # 绘制成交量
+        ax2 = plt.subplot(gs[1], sharex=ax1)
+        ax2.bar(df['trade_date'], df['vol'], color='#2ca02c', alpha=0.7, label='成交量')
+        ax2.set_ylabel('成交量', fontsize=12)
         
-        # 输出预测价格
-        for i in range(0, len(future_df), 5):
-            print(f"日期: {future_df.iloc[i]['date'].strftime('%Y-%m-%d')}, "
-                  f"预测价格: {future_df.iloc[i]['predicted_price']:.2f}")
+        # 设置图例
+        ax1.legend(loc='upper left', fontsize=10)
         
-        # 分析主动买入情况
-        print("\n最近5天主动买入情况:")
-        buy_ratio_analysis = self.analyze_buy_ratio(df)
-        for date, ratio, ma5, trend in buy_ratio_analysis:
-            print(f"日期: {date}, 收盘: {df.loc[date, 'close']:.2f}, "
-                  f"主动买入: {ratio:.2f}%, 5日均值: {ma5:.2f}%, "
-                  f"趋势: {trend}")
+        # 调整布局，确保所有元素都能显示
+        plt.tight_layout()
+        plt.subplots_adjust(hspace=0.3)  # 增加子图之间的间距
         
-        # 输出显著的量价背离点
-        print("\n显著的量价背离点:")
-        significant_divergences = self.find_significant_divergences(df)
-        for _, row in significant_divergences.iterrows():
-            print(f"日期: {row['trade_date']}, "
-                  f"收盘价: {row['close']:.2f}, "
-                  f"背离强度: {row['divergence_strength']:.1f}, "
-                  f"成交量变化: {row['volume_change_rate']:.1f}%, "
-                  f"价格变化: {row['price_change_rate']:.1f}%")
-                  
-        # 显示威科夫分析图
-        self.plot_wyckoff_analysis(df)
+        # 显示图形
+        plt.show()
+        
+        return fig
 
     def plot_prediction_analysis(self, df, future_df):
         """绘制未来30天预测分析图"""
@@ -1128,6 +1157,59 @@ class StockAnalyzer:
         # 调整布局
         plt.tight_layout()
         plt.show()
+
+    def analyze(self):
+        """分析股票数据"""
+        df = self.get_data()
+        if df is None or len(df) == 0:
+            print("无法获取数据")
+            return
+            
+        # 计算量价背离
+        divergence_dates = self.check_divergence(df)
+        print("\n量价背离日期:")
+        print(divergence_dates[['trade_date', 'close', 'vol']])
+        
+        # 预测价格
+        future_df, confidence, _, weights = self.predict_price(df)
+        
+        print(f"\n价格预测 (模型置信度: {confidence:.2%}):\n")
+        print("未来30天预测价格:")
+        
+        # 输出威科夫分析结果
+        wyckoff_analysis = self.analyze_wyckoff(df)
+        print(f"\n威科夫分析:")
+        print(f"当前阶段: {future_df['wyckoff_phase'].iloc[0]}")
+        print(f"趋势强度: {wyckoff_analysis['trend_strength']}/4")
+        print(f"支撑位: {wyckoff_analysis['support']:.2f}")
+        print(f"阻力位: {wyckoff_analysis['resistance']:.2f}")
+        print(f"价格位置: {wyckoff_analysis['price_position']:.2%}")
+        
+        # 输出预测价格
+        for i in range(0, len(future_df), 5):
+            print(f"日期: {future_df.iloc[i]['date'].strftime('%Y-%m-%d')}, "
+                  f"预测价格: {future_df.iloc[i]['predicted_price']:.2f}")
+        
+        # 分析主动买入情况
+        print("\n最近5天主动买入情况:")
+        buy_ratio_analysis = self.analyze_buy_ratio(df)
+        for date, ratio, ma5, trend in buy_ratio_analysis:
+            print(f"日期: {date}, 收盘: {df.loc[date, 'close']:.2f}, "
+                  f"主动买入: {ratio:.2f}%, 5日均值: {ma5:.2f}%, "
+                  f"趋势: {trend}")
+        
+        # 输出显著的量价背离点
+        print("\n显著的量价背离点:")
+        significant_divergences = self.find_significant_divergences(df)
+        for _, row in significant_divergences.iterrows():
+            print(f"日期: {row['trade_date']}, "
+                  f"收盘价: {row['close']:.2f}, "
+                  f"背离强度: {row['divergence_strength']:.1f}, "
+                  f"成交量变化: {row['volume_change_rate']:.1f}%, "
+                  f"价格变化: {row['price_change_rate']:.1f}%")
+                  
+        # 显示威科夫分析图
+        self.plot_wyckoff_analysis(df)
 
 if __name__ == "__main__":
     # 恒生电子股票代码

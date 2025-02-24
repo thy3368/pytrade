@@ -145,14 +145,14 @@ files = [
 
 [[package]]
 name = "akshare"
-version = "1.16.9"
+version = "1.16.10"
 description = "AKShare is an elegant and simple financial data interface library for Python, built for human beings!"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "akshare-1.16.9-py3-none-any.whl", hash = "sha256:e1d86f2bf63b298385734a7a65077e6a3d064768b09d02921fe1cba69be9e3c0"},
-    {file = "akshare-1.16.9.tar.gz", hash = "sha256:0823c52ba49601d434c9bb39f313016118f11751ef535dbabeaee0f79bf2b26d"},
+    {file = "akshare-1.16.10-py3-none-any.whl", hash = "sha256:ad35634c9cb5b5190631cfcc6bf6fd3b6e5168ae2cfa92ff0f32f6390957fc79"},
+    {file = "akshare-1.16.10.tar.gz", hash = "sha256:0771478ca1cafaedb7c3e66835610aa343c9deb5bff894d4372c937d41f6e5f7"},
 ]
 
 [package.dependencies]
@@ -531,6 +531,21 @@ files = [
     {file = "blinker-1.9.0-py3-none-any.whl", hash = "sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc"},
     {file = "blinker-1.9.0.tar.gz", hash = "sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf"},
 ]
+
+[[package]]
+name = "branca"
+version = "0.8.1"
+description = "Generate complex HTML+JS pages with Python"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "branca-0.8.1-py3-none-any.whl", hash = "sha256:d29c5fab31f7c21a92e34bf3f854234e29fecdcf5d2df306b616f20d816be425"},
+    {file = "branca-0.8.1.tar.gz", hash = "sha256:ac397c2d79bd13af0d04193b26d5ed17031d27609a7f1fab50c438b8ae712390"},
+]
+
+[package.dependencies]
+jinja2 = ">=3"
 
 [[package]]
 name = "bs4"
@@ -1076,14 +1091,14 @@ files = [
 
 [[package]]
 name = "decorator"
-version = "5.1.1"
+version = "5.2.0"
 description = "Decorators for Humans"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
-    {file = "decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
+    {file = "decorator-5.2.0-py3-none-any.whl", hash = "sha256:f30a69c066f698c7c11fa1fa3425f684d3b4b01b494ee41e73c0a14f3de48427"},
+    {file = "decorator-5.2.0.tar.gz", hash = "sha256:1cf2ab68f8c1c7eae3895d82ab0daab41294cfbe6fbdebf50b44307299980762"},
 ]
 
 [[package]]
@@ -1292,6 +1307,28 @@ files = [
     {file = "flatbuffers-25.2.10-py2.py3-none-any.whl", hash = "sha256:ebba5f4d5ea615af3f7fd70fc310636fbb2bbd1f566ac0a23d98dd412de50051"},
     {file = "flatbuffers-25.2.10.tar.gz", hash = "sha256:97e451377a41262f8d9bd4295cc836133415cc03d8cb966410a4af92eb00d26e"},
 ]
+
+[[package]]
+name = "folium"
+version = "0.19.4"
+description = "Make beautiful maps with Leaflet.js & Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "folium-0.19.4-py2.py3-none-any.whl", hash = "sha256:bea5246b6a6aa61b96d1c51399dd63254bacbd6ba8a826eeb491f45242032dfd"},
+    {file = "folium-0.19.4.tar.gz", hash = "sha256:431a655b52a9bf3efda336f2be022103f0106504a0599e7c349efbfd30bafda6"},
+]
+
+[package.dependencies]
+branca = ">=0.6.0"
+jinja2 = ">=2.9"
+numpy = "*"
+requests = "*"
+xyzservices = "*"
+
+[package.extras]
+testing = ["pytest"]
 
 [[package]]
 name = "fonttools"
@@ -3740,14 +3777,14 @@ sympy = "*"
 
 [[package]]
 name = "openai"
-version = "1.63.2"
+version = "1.64.0"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "openai-1.63.2-py3-none-any.whl", hash = "sha256:1f38b27b5a40814c2b7d8759ec78110df58c4a614c25f182809ca52b080ff4d4"},
-    {file = "openai-1.63.2.tar.gz", hash = "sha256:aeabeec984a7d2957b4928ceaa339e2ead19c61cfcf35ae62b7c363368d26360"},
+    {file = "openai-1.64.0-py3-none-any.whl", hash = "sha256:20f85cde9e95e9fbb416e3cb5a6d3119c0b28308afd6e3cc47bf100623dac623"},
+    {file = "openai-1.64.0.tar.gz", hash = "sha256:2861053538704d61340da56e2f176853d19f1dc5704bc306b7597155f850d57a"},
 ]
 
 [package.dependencies]
@@ -4347,14 +4384,14 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "posthog"
-version = "3.15.0"
+version = "3.15.1"
 description = "Integrate PostHog into any python application."
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "posthog-3.15.0-py2.py3-none-any.whl", hash = "sha256:e546edd9a3d9ab4b50cdb57d6e9443826cee2254ea1c3a20cfe1e43e7b54c3c1"},
-    {file = "posthog-3.15.0.tar.gz", hash = "sha256:c8503b911fb04b8fbae55ba828f0fda1e2da6e644d135e77b8000a7b82c8dd39"},
+    {file = "posthog-3.15.1-py2.py3-none-any.whl", hash = "sha256:df5700f5cc26b7d08e81d15f0a11b68f4a0f5cec7422984cd4118d5d475e99e6"},
+    {file = "posthog-3.15.1.tar.gz", hash = "sha256:ea42b83c985ce28f2ae46713469b4107762805250c21807bc456c3fdc5ae940c"},
 ]
 
 [package.dependencies]
@@ -7410,6 +7447,18 @@ docs = ["sphinx"]
 test = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "xyzservices"
+version = "2025.1.0"
+description = "Source of XYZ tiles providers"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "xyzservices-2025.1.0-py3-none-any.whl", hash = "sha256:fa599956c5ab32dad1689960b3bb08fdcdbe0252cc82d84fc60ae415dc648907"},
+    {file = "xyzservices-2025.1.0.tar.gz", hash = "sha256:5cdbb0907c20be1be066c6e2dc69c645842d1113a4e83e642065604a21f254ba"},
+]
+
+[[package]]
 name = "yarl"
 version = "1.18.3"
 description = "Yet another URL library"
@@ -7556,4 +7605,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4"
-content-hash = "3a6f123dcaad06acd74dbdeba516de72fc69761b4102eac3c52ed35e8b95dc94"
+content-hash = "9d48b8f9d07ef35d68fba32d4a7b55e8c73745a00813cff35cedef11dc51ee2f"
